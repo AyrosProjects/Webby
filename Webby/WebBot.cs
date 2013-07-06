@@ -6,6 +6,7 @@ using System.Net.Cache;
 using System.Text;
 using Webby.Common;
 using Webby.Utilities;
+using System.IO;
 
 namespace Webby
 {
@@ -42,7 +43,6 @@ namespace Webby
 			HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(wbReq.URL);
 			httpRequest.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
 			httpRequest.KeepAlive = false;
-			httpRequest.Method = wbReq.Method;
 			httpRequest.Pipelined = false;
 			httpRequest.Proxy = Options.Proxy;
 			httpRequest.ReadWriteTimeout = Options.ReadWriteTimeout;
@@ -53,7 +53,23 @@ namespace Webby
 				httpRequest.CookieContainer = Cookies.DeepClone();
 			}
 
-			if (wbReq.Method != "GET")
+			if (wbReq.Method == "GET")
+			{
+				httpRequest.Method = wbReq.Method;
+			}
+			else if (wbReq.Method == "POST")
+			{
+				httpRequest.Method = wbReq.Method;
+				httpRequest.ContentType = "application/x-www-form-urlencoded";
+				using (StreamWriter writer = new StreamWriter(httpRequest.GetRequestStream()))
+				{
+					foreach (KeyValuePair<string, string> pair in wbReq.Parameters)
+					{
+						writer.Write(pair.Key + "=" + pair.Value + "&");
+					}
+				}
+			}
+			else
 			{
 				throw new NotImplementedException();
 			}
