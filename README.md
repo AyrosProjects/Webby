@@ -3,9 +3,7 @@
 Webby is a simple, multifunctional web bot written in C# and usable in any .NET language. It can be used for web scraping, testing, and automation.
 
 ###Planned Features
-- Proxy support
-	- Socks and HTTP
-	- Autoswitching
+- Proxy lists and auto-switching
 - Page caching
 - HtmlAgilityPack integration
 - Multithreaded and asynchronous requests without having to manually manage threads
